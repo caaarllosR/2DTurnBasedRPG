@@ -1,0 +1,16 @@
+git commit -m "teste commit prd"
+git push -u origin master  -- sobe alterações de uma branch para repositorio
+git checkout -b develop -- cria a nova branch e aponta para ela
+git branch  -- lista branchs mostrnado a que esta selecionada
+git push -u origin develop
+git add --all  -- adiciona alterações para commit
+git commit -m "adicionando alteracoes em desenvolvimento"
+
+git log --pretty=format:"%h - %an, %ar : %s" -- exibe log de commits com informações especificas incluindo hash do commit
+git revert -n (codiohash)  -- reverte um commit exemplo: git revert -n 3d5a821
+
+ti checkout master  -- aponta para uma branch especifica
+git merge develop   -- da merge de uma branch qualquer para a branch em que se esta
+ti checkout develop -- aponta para uma branch especifica
+
+

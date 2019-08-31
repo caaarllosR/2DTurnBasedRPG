@@ -1,0 +1,27 @@
+0 - Concluir sistema protótipo do sistema de batalha (05 maio)
+    - 30 dias
+0.1 - Testar sistema de batalha conceito
+    - 1 mês
+
+1 - Desenvolver os 3 três principais 
+    - 2 semanas
+
+1.1 - Testar sistema de batalha com personagens, inimigos, magias e etc
+      - 1 mês 
+      
+2 - Definir as mecânicas que cada um dos 3 coadjuvantes representam (healer, quebra de defesa e etc)
+    - 3 dias
+    
+3 - Definir funcionamento e regra dos puzzle padrão para desenvolvimento (recorrentes) (reanimar corpos, possessão e etc)
+    - 15 dias todos
+
+
+
+
+
+--------------------------------------
+
+- 1 ano no escopo principal.
+- Busca por artistas e etc.
+- Trabalhar nas side quest no meio tempo entre a criação da arte, som e etc.
+
