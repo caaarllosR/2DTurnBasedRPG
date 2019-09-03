@@ -12,17 +12,17 @@ public class UpdateCharEvents : MonoBehaviour
         UpdateActionButtons();
     }
 
-    public void UpdateSelectedChar()
+    private void UpdateSelectedChar()
     {
-        MessageManager<ButtonCharMessageEvent>.Instance.DynamicInvoke<ButtonCharMessageEvent>(new SelectCharMessage
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharMessage
         {
             Char = _char
         }, "OnSelectedChar");
     }
 
-    public void UpdateActionButtons()
+    private void UpdateActionButtons()
     {
-        MessageManager<ButtonCharMessageEvent>.Instance.DynamicInvoke<ButtonCharMessageEvent>(new SelectActionMessage
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectActionMessage
         {
             Action = _actionButtons
         }, "OnEnableActionButtons");

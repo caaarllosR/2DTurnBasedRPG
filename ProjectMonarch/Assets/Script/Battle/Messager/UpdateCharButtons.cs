@@ -17,7 +17,7 @@ public class UpdateCharButtons : MonoBehaviour
     {
         UpdateDisaleActionButtons();
     }
-    public void UpdateSelectedChar()
+    private void UpdateSelectedChar()
     {
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharMessage
         {
@@ -26,7 +26,7 @@ public class UpdateCharButtons : MonoBehaviour
         }, "OnSelectedChar");
     }
 
-    public void UpdateDisaleActionButtons()
+    private void UpdateDisaleActionButtons()
     {
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectActionMessage
         {
@@ -34,7 +34,7 @@ public class UpdateCharButtons : MonoBehaviour
         }, "OnDisableActionButtons");
     }
 
-    public void UpdateActionButtons()
+    private void UpdateActionButtons()
     {
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectActionMessage
         {

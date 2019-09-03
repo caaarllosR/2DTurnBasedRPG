@@ -3,16 +3,8 @@ using UnityEngine;
 
 public class UpdateButtons : MonoBehaviour
 {
-    public GameObject _buttonsY;
-    public GameObject _buttonsX;
-    public GameObject _buttonsA;
-    public GameObject _buttonsB;
-
-    private GameObject[] _buttons;
-
     private void Awake()
     {
-        _buttons = new GameObject[] { _buttonsY, _buttonsX, _buttonsA, _buttonsB};
     }
 
     private void Update()
@@ -25,19 +17,17 @@ public class UpdateButtons : MonoBehaviour
     }
 
 
-    public void UpdateDisabledCharButtons()
+    private void UpdateDisabledCharButtons()
     {    
-        MessageManager<ButtonCharMessageEvent>.Instance.DynamicInvoke<ButtonCharMessageEvent>(new SelectButtonMessage
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
         {
-            Button = _buttons
         }, "OnDisableCharButtons");
     }
 
-    public void UpdateEnabledCharButtons()
+    private void UpdateEnabledCharButtons()
     {
-        MessageManager<ButtonCharMessageEvent>.Instance.DynamicInvoke<ButtonCharMessageEvent>(new SelectButtonMessage
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
         {
-            Button = _buttons
         }, "OnEnableCharButtons");
     }
 }

@@ -3,18 +3,18 @@ using System.Linq;
 using UnityEngine;
 
 
-public class BattleState
+public class BattleStateManager
 {
-    private static BattleState _instance;
+    private static BattleStateManager _instance;
     public enum BattleStates : short {startTurn, selectChar, selectAction, selectTarget, battlePhase, endTurn}
     private BattleStates States {get; set;}
 
-    public static BattleState Instance
+    public static BattleStateManager Instance
     {
-        get { return _instance ?? (_instance = new BattleState()); }
+        get { return _instance ?? (_instance = new BattleStateManager()); }
     }
 
-    private BattleState()
+    private BattleStateManager()
     {
         States = BattleStates.startTurn;
     }

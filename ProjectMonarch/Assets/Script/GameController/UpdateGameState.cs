@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class UpdateGameState : MonoBehaviour
 {
-    public void UpdateBattleState()
-    {
-        BattleState.Instance.BackState();
-        Debug.Log(BattleState.Instance.GetState());
-    }
+
+
 }

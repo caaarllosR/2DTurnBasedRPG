@@ -9,6 +9,12 @@ public class UpdateMainButtons : MonoBehaviour
     public GameObject _charA;
     public GameObject _charB;
 
+    public GameObject _enemY;
+    public GameObject _enemX;
+    public GameObject _enemA;
+    public GameObject _enemB;
+
+    public GameObject[] _enemyButtons;
 
     private void Awake()
     {
@@ -16,6 +22,8 @@ public class UpdateMainButtons : MonoBehaviour
         CharButtonStateManager.Instance.AddCharButton(_charX, false);
         CharButtonStateManager.Instance.AddCharButton(_charA, false);
         CharButtonStateManager.Instance.AddCharButton(_charB, false);
+
+        _enemyButtons = new GameObject[] { _enemY, _enemX, _enemA, _enemB };
     }
 
     private void Update()
@@ -27,25 +35,49 @@ public class UpdateMainButtons : MonoBehaviour
         UpdateDisabledCharButtons();
     }
 
-
     public void EnableCharButtons()
     {
         UpdateEnabledCharButtons();
     }
 
-    public void UpdateDisabledCharButtons()
+    public void EnableEnemyButtons()
     {
-        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectButtonMessage
-        {
-        }, "OnDisableButtons");
+        UpdateEnableEnemyButtons();
     }
 
-    public void UpdateEnabledCharButtons()
+    public void DisableEnemyButtons()
     {
-        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectButtonMessage
-        {
+        UpdateDisableEnemyButtons();
+    }
 
-        }, "OnEnableButtons");
+    private void UpdateDisableEnemyButtons()
+    {
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectEnemyButtonMessage
+        {
+           EnemyButtons = _enemyButtons
+        }, "OnDisableEnemyButtons");
+    }
+
+    private void UpdateEnableEnemyButtons()
+    {
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectEnemyButtonMessage
+        {
+           EnemyButtons = _enemyButtons
+        }, "OnEnableEnemyButtons");
+    }
+
+    private void UpdateDisabledCharButtons()
+    {
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
+        {
+        }, "OnDisableCharButtons");
+    }
+
+    private void UpdateEnabledCharButtons()
+    {
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
+        {
+        }, "OnEnableCharButtons");
     }
 
 }

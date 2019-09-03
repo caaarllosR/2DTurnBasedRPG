@@ -8,14 +8,15 @@ public class SelectCharEvent : MonoBehaviour
 
     private void Start()
     {
-        MessageManager<ButtonCharMessageEvent>.Instance.AddListener<ButtonCharMessageEvent, SelectCharMessage>(OnSelectedChar);
-        MessageManager<ButtonCharMessageEvent>.Instance.AddListener<ButtonCharMessageEvent, SelectButtonMessage>(OnDisableCharButtons);
-        MessageManager<ButtonCharMessageEvent>.Instance.AddListener<ButtonCharMessageEvent, SelectButtonMessage>(OnEnableCharButtons);
-        MessageManager<ButtonCharMessageEvent>.Instance.AddListener<ButtonCharMessageEvent, SelectActionMessage>(OnEnableActionButtons);
+        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharMessage>(OnSelectedChar);
+        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharButtonMessage>(OnDisableCharButtons);
+        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharButtonMessage>(OnEnableCharButtons);
+        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectActionMessage>(OnEnableActionButtons);
     }
 
     private void OnDestroy()
     {
+
     }
 
     private void OnSelectedChar(SelectCharMessage _selectChar)
@@ -24,14 +25,14 @@ public class SelectCharEvent : MonoBehaviour
         Debug.Log(_char.name);
     }
 
-    private void OnEnableCharButtons(SelectButtonMessage _selectButton)
+    private void OnDisableCharButtons(SelectCharButtonMessage _selectButton)
     {
-        GameObject[] _button = _selectButton.Button;
 
-        foreach (GameObject obj in _button)
-        {
-            obj.SetActive(true);
-        }
+    }
+
+    private void OnEnableCharButtons(SelectCharButtonMessage _selectButton)
+    {
+
     }
 
     private void OnEnableActionButtons(SelectActionMessage _selectAction)
@@ -46,15 +47,5 @@ public class SelectCharEvent : MonoBehaviour
         GameObject _action = _selectAction.Action;
         _action.SetActive(false);
         Debug.Log(_action.name);
-    }
-
-    private void OnDisableCharButtons(SelectButtonMessage _selectButton)
-    {
-        GameObject[] _button = _selectButton.Button;
-
-        foreach (GameObject obj in _button)
-        {
-            obj.SetActive(false);
-        }
     }
 }
