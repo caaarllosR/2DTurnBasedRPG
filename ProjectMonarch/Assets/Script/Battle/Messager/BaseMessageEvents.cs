@@ -18,9 +18,9 @@ public class SelectEnemyMessage : BattleMessageEvent
     public GameObject Enemy { get; set; }
 }
 
-public class SelectEnemyButtonMessage : BattleMessageEvent
+public class SelectTargetButtonMessage : BattleMessageEvent
 {
-    public GameObject[] EnemyButtons { get; set; }
+    public GameObject[] TargetButtons { get; set; }
 }
 
 public class SelectActionMessage : BattleMessageEvent

@@ -19,25 +19,9 @@ public class BattleStateManager
         States = BattleStates.startTurn;
     }
 
-
-    public BattleStates NextState()
+    public void SetState(BattleStates battleState)
     {
-        States++;
-        if (States > Enum.GetValues(typeof(BattleStates)).Cast<BattleStates>().Last())
-        {
-            States = Enum.GetValues(typeof(BattleStates)).Cast<BattleStates>().First();
-        }
-        return States;
-    }
-
-    public BattleStates BackState()
-    {
-        States--;
-        if (States < Enum.GetValues(typeof(BattleStates)).Cast<BattleStates>().First())
-        {
-            States = Enum.GetValues(typeof(BattleStates)).Cast<BattleStates>().Last();
-        }
-        return States;
+        States = battleState;
     }
 
     public BattleStates GetState()

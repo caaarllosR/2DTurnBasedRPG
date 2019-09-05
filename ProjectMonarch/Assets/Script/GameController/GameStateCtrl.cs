@@ -4,17 +4,14 @@ using UnityEngine;
 [System.Serializable]
 public class GameStateCtrl : MonoBehaviour
 {
-    private GameObject gameController;
-    void Awake()
+    private GameObject    gameController;
+    private MonoBehaviour gameButtonsCtrl;
+    void Start()
     {
-        gameController = GameObject.Find("GameController");
+        gameController  = GameObject.Find("GameController");
+        gameButtonsCtrl = gameController.GetComponent<UpdateMainButtons>();
     }
 
-    public void Start()
-    {
-
-    }
-   
     // Update is called once per frame
     void Update()
     {
@@ -24,6 +21,21 @@ public class GameStateCtrl : MonoBehaviour
         {
             //When a key is pressed down it see if it was the escape key if it was it will execute the code
             Application.Quit(); // Quits the game
+        }
+
+
+        if (BattleStateManager.Instance.GetState() == BattleStateManager.BattleStates.selectTarget)
+        {
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                gameButtonsCtrl.Invoke("EnableTcharButtons", 0);
+                gameButtonsCtrl.Invoke("DisableEnemyButtons", 0);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                gameButtonsCtrl.Invoke("EnableEnemyButtons", 0);
+                gameButtonsCtrl.Invoke("DisableTcharButtons", 0);
+            }
         }
     }
 }

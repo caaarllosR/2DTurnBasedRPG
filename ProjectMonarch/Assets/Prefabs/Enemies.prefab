@@ -120,8 +120,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6166839003164740234}
-        m_MethodName: SelectChar
+      - m_Target: {fileID: 0}
+        m_MethodName: EnableCharButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -132,7 +132,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 0}
-        m_MethodName: UpdateDisabledCharButtons
+        m_MethodName: DisableEnemyButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -397,8 +397,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2940696801645945002}
-        m_MethodName: SelectChar
+      - m_Target: {fileID: 0}
+        m_MethodName: EnableCharButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -409,7 +409,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 0}
-        m_MethodName: UpdateDisabledCharButtons
+        m_MethodName: DisableEnemyButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -574,8 +574,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2940696802055257855}
-        m_MethodName: SelectChar
+      - m_Target: {fileID: 0}
+        m_MethodName: EnableCharButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -586,7 +586,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 0}
-        m_MethodName: UpdateDisabledCharButtons
+        m_MethodName: DisableEnemyButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -718,8 +718,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2940696801538110237}
-        m_MethodName: SelectChar
+      - m_Target: {fileID: 0}
+        m_MethodName: EnableCharButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -730,7 +730,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 0}
-        m_MethodName: UpdateDisabledCharButtons
+        m_MethodName: DisableEnemyButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -791,6 +791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _char: {fileID: 8537423055149002620}
+  _charButton: {fileID: 0}
   _actionButtons: {fileID: 0}
 --- !u!1 &4399286674464808649
 GameObject:
@@ -841,6 +842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _char: {fileID: 8537423056714577558}
+  _charButton: {fileID: 0}
   _actionButtons: {fileID: 0}
 --- !u!1 &4399286674858639516
 GameObject:
@@ -891,6 +893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _char: {fileID: 8537423055565029095}
+  _charButton: {fileID: 0}
   _actionButtons: {fileID: 0}
 --- !u!1 &4636192635747759337
 GameObject:
@@ -942,6 +945,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _char: {fileID: 8537423055732020764}
+  _charButton: {fileID: 0}
   _actionButtons: {fileID: 0}
 --- !u!114 &3029342814350316739
 MonoBehaviour:
