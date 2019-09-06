@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
 public class CharButtonStateManager
 {
     private class CharButtonState
@@ -29,7 +28,7 @@ public class CharButtonStateManager
         _dictionary = new Dictionary<string, CharButtonState>();
     }
 
-    public void AddCharButton(GameObject charButton, bool isSelectedButton)
+    public void Add(GameObject charButton, bool isSelectedButton)
     {
         CharButtonState _charButtonState = new CharButtonState();
         _charButtonState.CharButton = charButton;
@@ -37,7 +36,7 @@ public class CharButtonStateManager
         _dictionary.Add(charButton.ToString(), _charButtonState);
     }
 
-    public void SetSelectedChar(GameObject charButton, bool isSelectedButton)
+    public void SetIsSelected(GameObject charButton, bool isSelectedButton)
     {
         CharButtonState _charButtonState = null;
         string key = charButton.ToString();
@@ -47,7 +46,7 @@ public class CharButtonStateManager
         }
     }
 
-    public void ActiveDeselectedCharButtons()
+    public void ActiveAllNotSelect()
     {
         foreach (KeyValuePair<string, CharButtonState> entry in _dictionary)
         {
@@ -58,7 +57,7 @@ public class CharButtonStateManager
         }
     }
 
-    public void DeactiveCharButtons()
+    public void DeactiveAll()
     {
         foreach (KeyValuePair<string, CharButtonState> entry in _dictionary)
         {
@@ -66,7 +65,7 @@ public class CharButtonStateManager
         }
     }
 
-    public void ActiveAllCharButtons()
+    public void ActiveAll()
     {
         foreach (KeyValuePair<string, CharButtonState> entry in _dictionary)
         {
@@ -75,12 +74,25 @@ public class CharButtonStateManager
         }
     }
 
-    public void DeselectAllCharButtons()
+    public void DeselectAll()
     {
         foreach (KeyValuePair<string, CharButtonState> entry in _dictionary)
         {
             entry.Value.IsSelectedButton = false;
         }
+    }
+
+    public bool IsDeselectAll()
+    {
+        bool allSelected = true;
+        foreach (KeyValuePair<string, CharButtonState> entry in _dictionary)
+        {
+            if(!entry.Value.IsSelectedButton)
+            {
+                allSelected = false;
+            }
+        }
+        return allSelected;
     }
 }
 

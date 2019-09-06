@@ -28,13 +28,13 @@ public class GameStateCtrl : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
+                gameButtonsCtrl.Invoke("DisableTargetButtons", 0);
                 gameButtonsCtrl.Invoke("EnableTcharButtons", 0);
-                gameButtonsCtrl.Invoke("DisableEnemyButtons", 0);
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
+                gameButtonsCtrl.Invoke("DisableTargetButtons", 0);
                 gameButtonsCtrl.Invoke("EnableEnemyButtons", 0);
-                gameButtonsCtrl.Invoke("DisableTcharButtons", 0);
             }
         }
     }

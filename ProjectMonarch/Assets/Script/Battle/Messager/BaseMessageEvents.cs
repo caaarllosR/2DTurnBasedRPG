@@ -13,11 +13,6 @@ public class SelectCharMessage : BattleMessageEvent
     public GameObject CharButton { get; set; }
 }
 
-public class SelectEnemyMessage : BattleMessageEvent
-{
-    public GameObject Enemy { get; set; }
-}
-
 public class SelectTargetButtonMessage : BattleMessageEvent
 {
     public GameObject[] TargetButtons { get; set; }
@@ -29,6 +24,11 @@ public class SelectActionMessage : BattleMessageEvent
 }
 
 public class SelectCharButtonMessage : BattleMessageEvent
+{
+
+}
+
+public class SelectBattleStateMessage : BattleMessageEvent
 {
 
 }

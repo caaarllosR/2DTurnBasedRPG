@@ -366,9 +366,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1793879524}
+    - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: OnSelectTargetState
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1448720271912987076, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -487,7 +517,7 @@ PrefabInstance:
     - target: {fileID: 8186456295709164867, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DisableTcharButtons
+      value: DisableTargetButtons
       objectReference: {fileID: 0}
     - target: {fileID: 8186456295709164867, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
@@ -602,7 +632,7 @@ PrefabInstance:
     - target: {fileID: 6077322720730755965, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DisableTcharButtons
+      value: DisableTargetButtons
       objectReference: {fileID: 0}
     - target: {fileID: 6077322720730755965, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
@@ -657,7 +687,7 @@ PrefabInstance:
     - target: {fileID: 871295967189120411, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DisableTcharButtons
+      value: DisableTargetButtons
       objectReference: {fileID: 0}
     - target: {fileID: 871295967189120411, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
@@ -712,7 +742,7 @@ PrefabInstance:
     - target: {fileID: 2655586869750991247, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DisableTcharButtons
+      value: DisableTargetButtons
       objectReference: {fileID: 0}
     - target: {fileID: 2655586869750991247, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
@@ -1008,7 +1038,7 @@ PrefabInstance:
     - target: {fileID: 1365896773847251708, guid: 341d386bd68a88143ab84e99a1cb1053,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DisableEnemyButtons
+      value: DisableTargetButtons
       objectReference: {fileID: 0}
     - target: {fileID: 1365896773847251708, guid: 341d386bd68a88143ab84e99a1cb1053,
         type: 3}
@@ -1083,7 +1113,7 @@ PrefabInstance:
     - target: {fileID: 1365896775782610633, guid: 341d386bd68a88143ab84e99a1cb1053,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DisableEnemyButtons
+      value: DisableTargetButtons
       objectReference: {fileID: 0}
     - target: {fileID: 1365896775782610633, guid: 341d386bd68a88143ab84e99a1cb1053,
         type: 3}
@@ -1118,7 +1148,7 @@ PrefabInstance:
     - target: {fileID: 1365896774147172712, guid: 341d386bd68a88143ab84e99a1cb1053,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DisableEnemyButtons
+      value: DisableTargetButtons
       objectReference: {fileID: 0}
     - target: {fileID: 1365896774147172712, guid: 341d386bd68a88143ab84e99a1cb1053,
         type: 3}
@@ -1153,7 +1183,7 @@ PrefabInstance:
     - target: {fileID: 1365896775112344071, guid: 341d386bd68a88143ab84e99a1cb1053,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DisableEnemyButtons
+      value: DisableTargetButtons
       objectReference: {fileID: 0}
     - target: {fileID: 1365896775112344071, guid: 341d386bd68a88143ab84e99a1cb1053,
         type: 3}

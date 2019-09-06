@@ -24,10 +24,10 @@ public class UpdateMainButtons : MonoBehaviour
 
     private void Awake()
     {
-        CharButtonStateManager.Instance.AddCharButton(_buttonCharY, false);
-        CharButtonStateManager.Instance.AddCharButton(_buttonCharX, false);
-        CharButtonStateManager.Instance.AddCharButton(_buttonCharA, false);
-        CharButtonStateManager.Instance.AddCharButton(_buttonCharB, false);
+        CharButtonStateManager.Instance.Add(_buttonCharY, false);
+        CharButtonStateManager.Instance.Add(_buttonCharX, false);
+        CharButtonStateManager.Instance.Add(_buttonCharA, false);
+        CharButtonStateManager.Instance.Add(_buttonCharB, false);
 
         _targetEnemyButtons = new GameObject[] { _targetEnemY, _targetEnemX, _targetEnemA, _targetEnemB };
         _targetCharButtons  = new GameObject[] { _targetCharY, _targetCharX, _targetCharA, _targetCharB };
@@ -52,18 +52,19 @@ public class UpdateMainButtons : MonoBehaviour
         UpdateEnableEnemyButtons();
     }
 
-    public void DisableEnemyButtons()
-    {
-        UpdateDisableEnemyButtons();
-    }
 
     public void EnableTcharButtons()
     {
         UpdateEnableTCharButtons();
     }
 
-    public void DisableTcharButtons()
+    public void DisableTargetButtons()
     {
+        if (CharButtonStateManager.Instance.IsDeselectAll())
+        {
+            BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.battlePhase);
+        }
+        UpdateDisableEnemyButtons();
         UpdateDisableTCharButtons();
     }
 
@@ -73,7 +74,7 @@ public class UpdateMainButtons : MonoBehaviour
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
            TargetButtons = _targetEnemyButtons
-        }, "OnEnableEnemyButtons");
+        }, "OnEnableTargetButtons");
     }
 
     private void UpdateDisableEnemyButtons()
@@ -81,7 +82,7 @@ public class UpdateMainButtons : MonoBehaviour
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
            TargetButtons = _targetEnemyButtons
-        }, "OnDisableEnemyButtons");
+        }, "OnDisableTargetButtons");
     }
 
     private void UpdateEnableTCharButtons()
@@ -89,7 +90,7 @@ public class UpdateMainButtons : MonoBehaviour
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
             TargetButtons = _targetCharButtons
-        }, "OnEnableTCharButtons");
+        }, "OnEnableTargetButtons");
     }
 
     private void UpdateDisableTCharButtons()
@@ -97,7 +98,7 @@ public class UpdateMainButtons : MonoBehaviour
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
             TargetButtons = _targetCharButtons
-        }, "OnDisableTCharButtons");
+        }, "OnDisableTargetButtons");
     }
 
     private void UpdateEnabledCharButtons()

@@ -12,10 +12,8 @@ public class SelectedButtonEvent : MonoBehaviour
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharMessage>(OnSelectedChar);
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharButtonMessage>(OnDisableCharButtons);
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharButtonMessage>(OnEnableCharButtons);
-        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectTargetButtonMessage>(OnEnableEnemyButtons);
-        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectTargetButtonMessage>(OnDisableEnemyButtons);
-        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectTargetButtonMessage>(OnEnableTCharButtons);
-        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectTargetButtonMessage>(OnDisableTCharButtons);
+        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectTargetButtonMessage>(OnEnableTargetButtons);
+        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectTargetButtonMessage>(OnDisableTargetButtons);
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectActionMessage>(OnEnableActionButtons);
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectActionMessage>(OnDisableActionButtons);
     }
@@ -27,32 +25,11 @@ public class SelectedButtonEvent : MonoBehaviour
     private void OnSelectedChar(SelectCharMessage _selectChar)
     {
         GameObject _char = _selectChar.Char;
-        CharButtonStateManager.Instance.SetSelectedChar(_selectChar.CharButton, true);
-    }
-
-    private void OnSelectedEnemy(SelectEnemyMessage _selectEnemy)
-    {
-        GameObject _enem = _selectEnemy.Enemy;
+        CharButtonStateManager.Instance.SetIsSelected(_selectChar.CharButton, true);
     }
 
 
-    private void OnDisableEnemyButtons(SelectTargetButtonMessage _selectEnemy)
-    {
-        foreach (GameObject enemyButton in _selectEnemy.TargetButtons)
-        {
-            enemyButton.SetActive(false);
-        }
-    }
-
-    private void OnEnableEnemyButtons(SelectTargetButtonMessage _selectEnemy)
-    {
-        foreach (GameObject enemyButton in _selectEnemy.TargetButtons)
-        {
-            enemyButton.SetActive(true);
-        }
-    }
-
-    private void OnDisableTCharButtons(SelectTargetButtonMessage _selectTChar)
+    private void OnDisableTargetButtons(SelectTargetButtonMessage _selectTChar)
     {
         foreach (GameObject tCharButton in _selectTChar.TargetButtons)
         {
@@ -60,7 +37,7 @@ public class SelectedButtonEvent : MonoBehaviour
         }
     }
 
-    private void OnEnableTCharButtons(SelectTargetButtonMessage _selectTChar)
+    private void OnEnableTargetButtons(SelectTargetButtonMessage _selectTChar)
     {
         foreach (GameObject tCharButton in _selectTChar.TargetButtons)
         {
@@ -82,11 +59,11 @@ public class SelectedButtonEvent : MonoBehaviour
 
     private void OnEnableCharButtons(SelectCharButtonMessage _selectButton)
     {
-        CharButtonStateManager.Instance.ActiveDeselectedCharButtons();
+        CharButtonStateManager.Instance.ActiveAllNotSelect();
     }
 
     private void OnDisableCharButtons(SelectCharButtonMessage _selectButton)
     {
-        CharButtonStateManager.Instance.DeactiveCharButtons();
+        CharButtonStateManager.Instance.DeactiveAll();
     }
 }
