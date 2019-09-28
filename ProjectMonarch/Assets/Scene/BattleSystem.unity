@@ -132,6 +132,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1455073406247663246, guid: 0b2bb4bfbdc9964479df37641d78b630,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1455073406247663282, guid: 0b2bb4bfbdc9964479df37641d78b630,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -367,7 +372,7 @@ PrefabInstance:
     - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1448720270786045425, guid: 05f92497ce496e3409969a11cb12161c,
         type: 3}
@@ -748,6 +753,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112466725546166564, guid: 05f92497ce496e3409969a11cb12161c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05f92497ce496e3409969a11cb12161c, type: 3}
@@ -1189,6 +1199,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8537423056136787497, guid: 341d386bd68a88143ab84e99a1cb1053,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3029342814350316739, guid: 341d386bd68a88143ab84e99a1cb1053, type: 3}

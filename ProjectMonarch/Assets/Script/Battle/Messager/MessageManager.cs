@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MessageManager<T>
 {
-    private static Dictionary<Type, Dictionary<Type, List<Delegate>>> _listeners;
+    private Dictionary<Type, Dictionary<Type, List<Delegate>>> _listeners;
     private static MessageManager<T> _instance;
 
     public static MessageManager<T> Instance

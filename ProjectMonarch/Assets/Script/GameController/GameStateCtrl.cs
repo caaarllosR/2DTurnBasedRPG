@@ -15,8 +15,6 @@ public class GameStateCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        InputHandler.Instance.ExecuteCommand();
-
         if (Input.GetKeyDown("q"))
         {
             //When a key is pressed down it see if it was the escape key if it was it will execute the code
@@ -36,6 +34,20 @@ public class GameStateCtrl : MonoBehaviour
                 gameButtonsCtrl.Invoke("DisableTargetButtons", 0);
                 gameButtonsCtrl.Invoke("EnableEnemyButtons", 0);
             }
+        }
+
+        if (BattleStateManager.Instance.GetState() == BattleStateManager.BattleStates.battlePhase)
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                CharButtonStateManager.Instance.ActiveAll();
+                BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectChar);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log(BattleStateManager.Instance.GetState());
         }
     }
 }

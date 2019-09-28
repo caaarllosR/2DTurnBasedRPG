@@ -15,7 +15,6 @@ public class InputHandler
 
     }
 
-
     private ICommand CommandX_ = new Command1();
     private ICommand CommandY_ = new Command2();
     private ICommand CommandA_ = new Command3();
