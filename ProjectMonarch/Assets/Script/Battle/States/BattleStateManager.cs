@@ -6,7 +6,7 @@ using UnityEngine;
 public class BattleStateManager
 {
     private static BattleStateManager _instance;
-    public enum BattleStates : short {startTurn, selectChar, selectAction, selectTarget, battlePhase, endTurn}
+    public enum BattleStates : short { startBattle, startTurn, selectChar, selectAction, selectTarget, battlePhase, endTurn}
     private BattleStates States {get; set;}
 
     public static BattleStateManager Instance
@@ -16,7 +16,7 @@ public class BattleStateManager
 
     private BattleStateManager()
     {
-        States = BattleStates.startTurn;
+        States = BattleStates.startBattle;
     }
 
     public void SetState(BattleStates battleState)

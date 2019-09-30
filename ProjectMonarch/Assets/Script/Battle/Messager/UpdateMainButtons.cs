@@ -60,7 +60,7 @@ public class UpdateMainButtons : MonoBehaviour
 
     public void DisableTargetButtons()
     {
-        if (CharButtonStateManager.Instance.IsDeselectAll())
+        if (CharButtonStateManager.Instance.IsDeselectAll() && !(BattleStateManager.Instance.GetState().Equals(BattleStateManager.BattleStates.selectTarget)))
         {
             BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.battlePhase);
         }
@@ -70,6 +70,7 @@ public class UpdateMainButtons : MonoBehaviour
 
     private void UpdateEnableEnemyButtons()
     {
+        CharButtonStateManager.Instance.TargetButtons = _targetEnemyButtons;
         BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectTarget);
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
@@ -87,6 +88,7 @@ public class UpdateMainButtons : MonoBehaviour
 
     private void UpdateEnableTCharButtons()
     {
+        CharButtonStateManager.Instance.TargetButtons = _targetCharButtons;
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
             TargetButtons = _targetCharButtons

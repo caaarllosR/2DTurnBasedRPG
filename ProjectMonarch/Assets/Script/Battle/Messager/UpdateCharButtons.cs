@@ -17,8 +17,23 @@ public class UpdateCharButtons : MonoBehaviour
     {
         UpdateDisaleActionButtons();
     }
+
+    public void SelectTarget()
+    {
+        UpdateSelectedTarget();
+    }
+
+    private void UpdateSelectedTarget()
+    {
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetMessage
+        {
+            Target = _char
+        }, "OnSelectedTarget");
+    }
+
     private void UpdateSelectedChar()
     {
+        CharButtonStateManager.Instance.CharButton.Push(_charButton);
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharMessage
         {
             Char = _char,
@@ -36,6 +51,8 @@ public class UpdateCharButtons : MonoBehaviour
 
     private void UpdateActionButtons()
     {
+        BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectAction);
+        CharButtonStateManager.Instance.ActionButton = _actionButtons;
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectActionMessage
         {
             Action = _actionButtons

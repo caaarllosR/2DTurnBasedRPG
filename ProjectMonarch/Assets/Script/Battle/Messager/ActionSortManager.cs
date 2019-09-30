@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class ActionSortManager
 {
+    private string actor;  //nome ou id do ator
+    private string target; //nome ou id do alvo
+
+    public string Actor { get => actor; set => actor = value; }
+    public string Target { get => target; set => target = value; }
+
     private class ActorAction
     {
         private string actor;  //nome ou id do ator
@@ -13,13 +19,12 @@ public class ActionSortManager
 
         public string Actor { get => actor; set => actor = value; }
         public string Target { get => target; set => target = value; }
-
         private ActorAction() { }
 
         public ActorAction(string target, string actor)
         {
-            this.Target = target;
-            this.Actor = actor;
+            this.target = target;
+            this.actor  = actor;
         }
     }
 
@@ -37,7 +42,7 @@ public class ActionSortManager
         actions = new Dictionary<string, List<ActorAction>>();
     }
 
-    public void Add(string target, string actor)
+    public void Add()
     {
         ActorAction _actorAction = new ActorAction(target, actor);
         List<ActorAction> actors = null;

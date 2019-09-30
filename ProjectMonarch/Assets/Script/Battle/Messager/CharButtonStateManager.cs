@@ -6,6 +6,15 @@ using UnityEngine;
 
 public class CharButtonStateManager
 {
+    private GameObject actionButton;
+    private GameObject[] targetButtons;
+    private Stack<GameObject> charButton = new Stack<GameObject>();
+
+    public GameObject ActionButton { get => actionButton; set => actionButton = value; }
+    public GameObject[] TargetButtons { get => targetButtons; set => targetButtons = value; }
+    public Stack<GameObject> CharButton { get => charButton; set => charButton = value; }
+
+
     private class CharButtonState
     {
         private GameObject charButton;

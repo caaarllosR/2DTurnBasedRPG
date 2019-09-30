@@ -13,6 +13,11 @@ public class SelectCharMessage : BattleMessageEvent
     public GameObject CharButton { get; set; }
 }
 
+public class SelectTargetMessage : BattleMessageEvent
+{
+    public GameObject Target { get; set; }
+}
+
 public class SelectTargetButtonMessage : BattleMessageEvent
 {
     public GameObject[] TargetButtons { get; set; }

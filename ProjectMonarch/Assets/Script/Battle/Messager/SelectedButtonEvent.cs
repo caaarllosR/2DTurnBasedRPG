@@ -10,6 +10,7 @@ public class SelectedButtonEvent : MonoBehaviour
     private void Start()
     {
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharMessage>(OnSelectedChar);
+        MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectTargetMessage>(OnSelectedTarget);
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharButtonMessage>(OnDisableCharButtons);
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectCharButtonMessage>(OnEnableCharButtons);
         MessageManager<BattleMessageEvent>.Instance.AddListener<BattleMessageEvent, SelectTargetButtonMessage>(OnEnableTargetButtons);
@@ -25,9 +26,16 @@ public class SelectedButtonEvent : MonoBehaviour
     private void OnSelectedChar(SelectCharMessage _selectChar)
     {
         GameObject _char = _selectChar.Char;
+        ActionSortManager.Instance.Actor = _char.name;
         CharButtonStateManager.Instance.SetIsSelected(_selectChar.CharButton, true);
     }
 
+    private void OnSelectedTarget(SelectTargetMessage _selectTarget)
+    {
+        GameObject _target = _selectTarget.Target;
+        ActionSortManager.Instance.Target = _target.name;
+        ActionSortManager.Instance.Add();
+    }
 
     private void OnDisableTargetButtons(SelectTargetButtonMessage _selectTChar)
     {
