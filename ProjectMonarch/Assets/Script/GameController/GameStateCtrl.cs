@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Reflection;
 using UnityEngine;
 
 [System.Serializable]
@@ -9,50 +11,55 @@ public class GameStateCtrl : MonoBehaviour
 
     private BattleStateManager.BattleStates _battleState;
 
+    public void ClearLog()
+    {
+        var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
+        var type = assembly.GetType("UnityEditor.LogEntries");
+        var method = type.GetMethod("Clear");
+        method.Invoke(new object(), null);
+    }
+
+
     private void backOption(BattleStateManager.BattleStates state)
     {
-        Debug.Log(CharButtonStateManager.Instance.CharButton.Count);
         if (state.Equals(BattleStateManager.BattleStates.selectAction))
         {
-            CharButtonStateManager.Instance.SetIsSelected(CharButtonStateManager.Instance.CharButton.Peek(), false);
+            MainBattleButtonsManager.Instance.SetIsSelected(MainBattleButtonsManager.Instance.CharButtons.Peek(), false);
             MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectActionMessage
             {
-                Action = CharButtonStateManager.Instance.ActionButton
+                Action = MainBattleButtonsManager.Instance.ActionButton
             }, "OnDisableActionButtons");
             MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
             {
             }, "OnEnableCharButtons");
-            CharButtonStateManager.Instance.CharButton.Pop();
-            BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectChar);
+            MainBattleButtonsManager.Instance.CharButtons.Pop();
+            ActionSortManager.Instance.SelectedActors.Pop();
+            MainBattleButtonsManager.Instance.TargetButtons.Pop();
         }
 
         if (state.Equals(BattleStateManager.BattleStates.selectTarget))
         {
             MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
             {
-                TargetButtons = CharButtonStateManager.Instance.TargetButtons
+                TargetButtons = MainBattleButtonsManager.Instance.TargetButtons.Peek()
             }, "OnDisableTargetButtons");
-
             MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectActionMessage
             {
-                Action = CharButtonStateManager.Instance.ActionButton
+                Action = MainBattleButtonsManager.Instance.ActionButton
             }, "OnEnableActionButtons");
-            BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectAction);
         }
 
         if (state.Equals(BattleStateManager.BattleStates.selectChar))
         {
-            if (CharButtonStateManager.Instance.CharButton.Count > 0)
+            if (MainBattleButtonsManager.Instance.CharButtons.Count > 0)
             {
-                MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
-                {
-                }, "OnDisableCharButtons");
+                MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>("OnDisableCharButtons");
                 MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
                 {
-                    TargetButtons = CharButtonStateManager.Instance.TargetButtons
+                    TargetButtons = MainBattleButtonsManager.Instance.TargetButtons.Peek()
                 }, "OnEnableTargetButtons");
 
-                BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectTarget);
+                ActionSortManager.Instance.RemoveActor(ActionSortManager.Instance.SelectedActors.Peek());
             }
             else
             {
@@ -72,7 +79,7 @@ public class GameStateCtrl : MonoBehaviour
     {
         _battleState = BattleStateManager.Instance.GetState();
 
-        if (Input.GetKeyDown("q"))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             //When a key is pressed down it see if it was the escape key if it was it will execute the code
             Application.Quit(); // Quits the game
@@ -80,7 +87,7 @@ public class GameStateCtrl : MonoBehaviour
 
         if (_battleState == BattleStateManager.BattleStates.startTurn)
         {
-            CharButtonStateManager.Instance.CharButton.Clear();
+            MainBattleButtonsManager.Instance.CharButtons.Clear();
             BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectChar);
         }
 
@@ -89,11 +96,19 @@ public class GameStateCtrl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 gameButtonsCtrl.Invoke("DisableTargetButtons", 0);
+                if(MainBattleButtonsManager.Instance.TargetButtons.Count > 0)
+                {
+                    MainBattleButtonsManager.Instance.TargetButtons.Pop();
+                }
                 gameButtonsCtrl.Invoke("EnableTcharButtons", 0);
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 gameButtonsCtrl.Invoke("DisableTargetButtons", 0);
+                if (MainBattleButtonsManager.Instance.TargetButtons.Count > 0)
+                {
+                    MainBattleButtonsManager.Instance.TargetButtons.Pop();
+                }
                 gameButtonsCtrl.Invoke("EnableEnemyButtons", 0);
             }
         }
@@ -102,23 +117,32 @@ public class GameStateCtrl : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                CharButtonStateManager.Instance.ActiveAll();
+                MainBattleButtonsManager.Instance.ActiveAll();
                 BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.startTurn);
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.B))
+        else
         {
-            backOption(_battleState);
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                backOption(_battleState);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ClearLog();
+            ActionSortManager.Instance.Get();
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
             Debug.Log(_battleState);
-            if (_battleState == BattleStateManager.BattleStates.battlePhase)
-            {
-                ActionSortManager.Instance.Get();
-            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log(MainBattleButtonsManager.Instance.TargetButtons.Count);
         }
     }
 }

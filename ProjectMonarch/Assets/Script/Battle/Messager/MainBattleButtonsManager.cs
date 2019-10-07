@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class CharButtonStateManager
+public class MainBattleButtonsManager
 {
     private GameObject actionButton;
-    private GameObject[] targetButtons;
+    private Stack<GameObject[]> targetButtons;
     private Stack<GameObject> charButton = new Stack<GameObject>();
 
     public GameObject ActionButton { get => actionButton; set => actionButton = value; }
-    public GameObject[] TargetButtons { get => targetButtons; set => targetButtons = value; }
-    public Stack<GameObject> CharButton { get => charButton; set => charButton = value; }
+    public Stack<GameObject[]> TargetButtons { get => targetButtons; set => targetButtons = value; }
+    public Stack<GameObject> CharButtons { get => charButton; set => charButton = value; }
 
 
     private class CharButtonState
@@ -24,17 +24,18 @@ public class CharButtonStateManager
         public bool IsSelectedButton { get => isSelectedButton; set => isSelectedButton = value; }
     }
 
-    private static CharButtonStateManager _instance;
+    private static MainBattleButtonsManager _instance;
     private Dictionary<string, CharButtonState> _dictionary;
 
-    public static CharButtonStateManager Instance
+    public static MainBattleButtonsManager Instance
     {
-        get { return _instance ?? (_instance = new CharButtonStateManager()); }
+        get { return _instance ?? (_instance = new MainBattleButtonsManager()); }
     }
 
-    private CharButtonStateManager()
+    private MainBattleButtonsManager()
     {
         _dictionary = new Dictionary<string, CharButtonState>();
+        targetButtons = new Stack<GameObject[]>();
     }
 
     public void Add(GameObject charButton, bool isSelectedButton)

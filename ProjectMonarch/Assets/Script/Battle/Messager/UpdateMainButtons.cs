@@ -19,15 +19,15 @@ public class UpdateMainButtons : MonoBehaviour
     public GameObject _targetCharB;
     public GameObject _targetCharA;
 
-    public GameObject[] _targetEnemyButtons;
-    public GameObject[] _targetCharButtons;
+    private GameObject[] _targetEnemyButtons;
+    private GameObject[] _targetCharButtons;
 
     private void Awake()
     {
-        CharButtonStateManager.Instance.Add(_buttonCharY, false);
-        CharButtonStateManager.Instance.Add(_buttonCharX, false);
-        CharButtonStateManager.Instance.Add(_buttonCharA, false);
-        CharButtonStateManager.Instance.Add(_buttonCharB, false);
+        MainBattleButtonsManager.Instance.Add(_buttonCharY, false);
+        MainBattleButtonsManager.Instance.Add(_buttonCharX, false);
+        MainBattleButtonsManager.Instance.Add(_buttonCharA, false);
+        MainBattleButtonsManager.Instance.Add(_buttonCharB, false);
 
         _targetEnemyButtons = new GameObject[] { _targetEnemY, _targetEnemX, _targetEnemA, _targetEnemB };
         _targetCharButtons  = new GameObject[] { _targetCharY, _targetCharX, _targetCharA, _targetCharB };
@@ -60,7 +60,7 @@ public class UpdateMainButtons : MonoBehaviour
 
     public void DisableTargetButtons()
     {
-        if (CharButtonStateManager.Instance.IsDeselectAll() && !(BattleStateManager.Instance.GetState().Equals(BattleStateManager.BattleStates.selectTarget)))
+        if (MainBattleButtonsManager.Instance.IsDeselectAll() && !(BattleStateManager.Instance.GetState().Equals(BattleStateManager.BattleStates.selectTarget)))
         {
             BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.battlePhase);
         }
@@ -70,8 +70,7 @@ public class UpdateMainButtons : MonoBehaviour
 
     private void UpdateEnableEnemyButtons()
     {
-        CharButtonStateManager.Instance.TargetButtons = _targetEnemyButtons;
-        BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectTarget);
+        MainBattleButtonsManager.Instance.TargetButtons.Push(_targetEnemyButtons);
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
            TargetButtons = _targetEnemyButtons
@@ -82,13 +81,13 @@ public class UpdateMainButtons : MonoBehaviour
     {
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
-           TargetButtons = _targetEnemyButtons
+            TargetButtons = _targetEnemyButtons
         }, "OnDisableTargetButtons");
     }
 
     private void UpdateEnableTCharButtons()
     {
-        CharButtonStateManager.Instance.TargetButtons = _targetCharButtons;
+        MainBattleButtonsManager.Instance.TargetButtons.Push(_targetCharButtons);
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectTargetButtonMessage
         {
             TargetButtons = _targetCharButtons
@@ -105,7 +104,6 @@ public class UpdateMainButtons : MonoBehaviour
 
     private void UpdateEnabledCharButtons()
     {
-        BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.selectChar);
         MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
         {
         }, "OnEnableCharButtons");
@@ -113,8 +111,6 @@ public class UpdateMainButtons : MonoBehaviour
 
     private void UpdateDisabledCharButtons()
     {
-        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
-        {
-        }, "OnDisableCharButtons");
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>("OnDisableCharButtons");
     }
 }

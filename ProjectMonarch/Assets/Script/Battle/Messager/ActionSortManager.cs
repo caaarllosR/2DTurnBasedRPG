@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ActionSortManager
 {
-    private string actor;  //nome ou id do ator
-    private string target; //nome ou id do alvo
+    private Stack<string> selectedActors;  //nome ou id do ator
+    private string        selectedTarget; //nome ou id do alvo
 
-    public string Actor { get => actor; set => actor = value; }
-    public string Target { get => target; set => target = value; }
+    public Stack<string> SelectedActors  { get => selectedActors;  set => selectedActors  = value; }
+    public string        SelectedTarget  { get => selectedTarget;  set => selectedTarget  = value; }
 
     private class ActorAction
     {
@@ -17,7 +17,7 @@ public class ActionSortManager
         // a ação em si (bola de fogo)
         private string target; //nome ou id dos alvos
 
-        public string Actor { get => actor; set => actor = value; }
+        public string Actor  { get => actor;  set => actor  = value; }
         public string Target { get => target; set => target = value; }
         private ActorAction() { }
 
@@ -27,7 +27,6 @@ public class ActionSortManager
             this.actor  = actor;
         }
     }
-
 
     private static Dictionary<string, List<ActorAction>> actions;
     private static ActionSortManager _instance;
@@ -40,21 +39,52 @@ public class ActionSortManager
     private ActionSortManager()
     {
         actions = new Dictionary<string, List<ActorAction>>();
+        selectedActors  = new Stack<string>();
     }
 
     public void Add()
     {
-        ActorAction _actorAction = new ActorAction(target, actor);
+        string _selectedActor  = SelectedActors.Peek();
+        ActorAction _actorAction = new ActorAction(SelectedTarget, _selectedActor);
         List<ActorAction> actors = null;
 
-        if (actions.TryGetValue(target, out actors))
+        if (actions.TryGetValue(SelectedTarget, out actors))
         {
             actors.Add(_actorAction);
         }
         else
         {
             actors = new List<ActorAction> { _actorAction };
-            actions.Add(target, actors);
+            actions.Add(SelectedTarget, actors);
+        }
+    }
+
+    public void RemoveActor(string actor)
+    {
+        List<ActorAction> actors = null;
+        string key;
+        foreach(KeyValuePair<string, List<ActorAction>> _actions in actions)
+        {
+            actors = _actions.Value;
+            key    = _actions.Key;
+            foreach (ActorAction _actor in actors)
+            {
+                if(_actor.Actor.Equals(actor))
+                {
+                    if(actors.Count > 1)
+                    {
+                        if (actions.TryGetValue(key, out actors))
+                        {
+                            actors.Remove(_actor);
+                        }
+                    }
+                    else
+                    {
+                        actions.Remove(key);
+                    }
+                    return;
+                }
+            }
         }
     }
 

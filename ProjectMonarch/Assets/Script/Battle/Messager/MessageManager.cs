@@ -34,6 +34,26 @@ public class MessageManager<T>
         }
     }
 
+    public void DynamicInvoke<T2>(string eventName)
+    {
+        Dictionary<Type, List<Delegate>> delegates = null;
+        List<Delegate> messages = null;
+
+        if (_listeners.TryGetValue(typeof(T2), out delegates))
+        {
+            if (delegates.TryGetValue(typeof(T2), out messages))
+            {
+                foreach (Delegate message in messages)
+                { 
+                    if (message.Method.Name.Equals(eventName))
+                    {
+                        message.DynamicInvoke();
+                    }
+                }
+            }
+        }
+    }
+
     public void DynamicInvoke<T2>(object objMessage, string eventName)
     {
         Dictionary<Type, List<Delegate>> delegates = null;
@@ -51,6 +71,32 @@ public class MessageManager<T>
                     }
                 }
             }
+        }
+    }
+
+    public void AddListener<T2>(Action message)
+    {
+        Dictionary<Type, List<Delegate>> delegates = null;
+        List<Delegate> messages = null;
+
+        if (_listeners.TryGetValue(typeof(T2), out delegates))
+        {
+            if (delegates.TryGetValue(typeof(T2), out messages))
+            {
+                messages.Add(message);
+            }
+            else
+            {
+                messages = new List<Delegate> { message };
+                delegates.Add(typeof(T2), messages);
+            }
+        }
+        else
+        {
+            delegates = new Dictionary<Type, List<Delegate>>();
+            messages = new List<Delegate> { message };
+            delegates.Add(typeof(T2), messages);
+            _listeners.Add(typeof(T2), delegates);
         }
     }
 

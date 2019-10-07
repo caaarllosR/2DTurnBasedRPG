@@ -19,9 +19,7 @@ public class UpdateButtons : MonoBehaviour
 
     private void UpdateDisabledCharButtons()
     {    
-        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
-        {
-        }, "OnDisableCharButtons");
+        MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>("OnDisableCharButtons");
     }
 
     private void UpdateEnabledCharButtons()
