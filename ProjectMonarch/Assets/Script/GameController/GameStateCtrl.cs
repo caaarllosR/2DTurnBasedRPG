@@ -32,9 +32,20 @@ public class GameStateCtrl : MonoBehaviour
             MessageManager<BattleMessageEvent>.Instance.DynamicInvoke<BattleMessageEvent>(new SelectCharButtonMessage
             {
             }, "OnEnableCharButtons");
-            MainBattleButtonsManager.Instance.CharButtons.Pop();
-            ActionSortManager.Instance.SelectedActors.Pop();
-            MainBattleButtonsManager.Instance.TargetButtons.Pop();
+            
+            if(MainBattleButtonsManager.Instance.CharButtons.Count > 0)
+            {
+                MainBattleButtonsManager.Instance.CharButtons.Pop();
+            }
+            if (ActionSortManager.Instance.SelectedActors.Count > 1)
+            {
+                ActionSortManager.Instance.SelectedActors.Pop();
+            }
+            if (MainBattleButtonsManager.Instance.TargetButtons.Count > 1)
+            {
+                MainBattleButtonsManager.Instance.TargetButtons.Pop();
+            }
+            ActionSortManager.Instance.RemoveActor(ActionSortManager.Instance.SelectedActors.Peek());
         }
 
         if (state.Equals(BattleStateManager.BattleStates.selectTarget))
@@ -58,12 +69,6 @@ public class GameStateCtrl : MonoBehaviour
                 {
                     TargetButtons = MainBattleButtonsManager.Instance.TargetButtons.Peek()
                 }, "OnEnableTargetButtons");
-
-                ActionSortManager.Instance.RemoveActor(ActionSortManager.Instance.SelectedActors.Peek());
-            }
-            else
-            {
-                BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.startTurn);
             }
         }
     }
@@ -125,6 +130,8 @@ public class GameStateCtrl : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
+                Debug.Log(MainBattleButtonsManager.Instance.CharButtons.Count);
+                Debug.Log(BattleStateManager.Instance.GetState());
                 backOption(_battleState);
             }
         }

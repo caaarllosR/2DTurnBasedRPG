@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Collections.Concurrent;
 
 public class MainBattleButtonsManager
 {
@@ -13,6 +13,7 @@ public class MainBattleButtonsManager
     public GameObject ActionButton { get => actionButton; set => actionButton = value; }
     public Stack<GameObject[]> TargetButtons { get => targetButtons; set => targetButtons = value; }
     public Stack<GameObject> CharButtons { get => charButton; set => charButton = value; }
+    ConcurrentStack<int> stack = new ConcurrentStack<int>();
 
 
     private class CharButtonState
