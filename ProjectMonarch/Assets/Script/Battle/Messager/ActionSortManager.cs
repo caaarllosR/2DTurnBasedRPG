@@ -96,6 +96,11 @@ public class ActionSortManager
         }
     }
 
+    public void ClearAll()
+    {
+        _actions.Clear();
+    }
+
     public void Get()
     {
         foreach (List<ActorAction> actions in _actions.Values)

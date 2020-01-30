@@ -45,7 +45,6 @@ public class GameStateCtrl : MonoBehaviour
             {
                 MainBattleButtonsManager.Instance.TargetButtons.Pop();
             }
-            ActionSortManager.Instance.RemoveActor(ActionSortManager.Instance.SelectedActors.Peek());
         }
 
         if (state.Equals(BattleStateManager.BattleStates.selectTarget))
@@ -70,6 +69,7 @@ public class GameStateCtrl : MonoBehaviour
                     TargetButtons = MainBattleButtonsManager.Instance.TargetButtons.Peek()
                 }, "OnEnableTargetButtons");
             }
+            ActionSortManager.Instance.RemoveActor(ActionSortManager.Instance.SelectedActors.Peek());
         }
     }
 
@@ -120,11 +120,12 @@ public class GameStateCtrl : MonoBehaviour
 
         if (_battleState == BattleStateManager.BattleStates.battlePhase)
         {
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                MainBattleButtonsManager.Instance.ActiveAll();
-                BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.startTurn);
-            }
+            ClearLog();
+            ActionSortManager.Instance.Get();
+            ActionSortManager.Instance.ClearAll();
+            MainBattleButtonsManager.Instance.ActiveAll();
+            BattleStateManager.Instance.SetState(BattleStateManager.BattleStates.startTurn);
+
         }
         else
         {
