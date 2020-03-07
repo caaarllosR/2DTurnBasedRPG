@@ -107,7 +107,7 @@ public class ActionSortManager
         {
             foreach (ActorAction action in actions)
             {
-                Debug.Log(action.Actor+" atacou: "+ action.Target+"!");
+                Debug.Log(action.Actor+" atacou: "+ action.Target+" com a ação: "+ action.Action+"!");
             }
         }
     }

@@ -6,6 +6,9 @@ public class UpdateCharButtons : MonoBehaviour
     public GameObject _char;
     public GameObject _charButton;
     public GameObject _actionButtons;
+    public GameObject _actionY;
+    public GameObject _actionX;
+    public GameObject _actionA;
 
     public void SelectChar()
     {
