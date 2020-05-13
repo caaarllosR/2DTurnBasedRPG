@@ -50,20 +50,20 @@ public class ActionSortManager
         selectedActors  = new Stack<string>();
     }
 
-    public void Add()
+    public void AddTarget(string _selectedTarget)
     {
         string _selectedActor  = SelectedActors.Peek();
-        ActorAction _actorAction = new ActorAction(SelectedTarget, _selectedActor, SelectedTypeAction, SelectedAction);
+        ActorAction _actorAction = new ActorAction(_selectedTarget, _selectedActor, SelectedTypeAction, SelectedAction);
         List<ActorAction> actions = null;
 
-        if (_actions.TryGetValue(SelectedTarget, out actions))
+        if (_actions.TryGetValue(_selectedTarget, out actions))
         {
             actions.Add(_actorAction);
         }
         else
         {
             actions = new List<ActorAction> { _actorAction };
-            _actions.Add(SelectedTarget, actions);
+            _actions.Add(_selectedTarget, actions);
         }
     }
 

@@ -7,30 +7,28 @@ public class BattleMessageEvent
 }
 
 
-public class SelectCharMessage : BattleMessageEvent
+public class SelectActorMessage : BattleMessageEvent
 {
-    public GameObject Char { get; set; }
-    public GameObject CharButton { get; set; }
+    public GameObject Actor { get; set; }
+    public GameObject ActorButton { get; set; }
 }
 
 public class SelectTargetMessage : BattleMessageEvent
 {
     public GameObject Target { get; set; }
-}
-
-public class SelectTargetButtonMessage : BattleMessageEvent
-{
-    public GameObject[] TargetButtons { get; set; }
+    public GameObject TargetButton { get; set; }
 }
 
 public class SelectActionMessage : BattleMessageEvent
 {
     public GameObject Action { get; set; }
+    public GameObject ActionButton { get; set; }
 }
 
-public class SelectCharButtonMessage : BattleMessageEvent
-{
 
+public class SelectButtonsMessage : BattleMessageEvent
+{
+    public GameObject[] Buttons { get; set; }
 }
 
 public class SelectBattleStateMessage : BattleMessageEvent
