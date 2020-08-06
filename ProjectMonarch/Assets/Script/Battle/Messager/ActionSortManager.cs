@@ -1,85 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = System.Random;
 
 public class ActionSortManager
 {
-    private Stack<string> selectedActors;        // nome ou id do ator
-    private string selectedTarget;       // nome ou id do alvo
-    private string selectedTypeAction;  // nome ou id do alvo
-    private string selectedAction;     // nome ou id do alvo
-
-    public Stack<string> SelectedActors { get => selectedActors; set => selectedActors = value; }
-    public string SelectedTarget { get => selectedTarget; set => selectedTarget = value; }
-    public string SelectedTypeAction { get => selectedTypeAction; set => selectedTypeAction = value; }
-    public string SelectedAction { get => selectedAction; set => selectedAction = value; }
+    private Random gen = new Random(); //#Temporario
 
     private class ActorAction
     {
-        private string actor;         // nome ou id do ator
-        private string typeAction;   // tipo da ação (magia, ação fisica e etc)
-        private string action;      // a ação em si (bola de fogo)
-        private string target;     // nome ou id dos alvos
-
-        public string Actor { get => actor; set => actor = value; }
-        public string Target { get => target; set => target = value; }
-        public string Action { get => action; set => action = value; }
-        public string TypeAction { get => typeAction; set => typeAction = value; }
-
         public ActorAction(string target, string actor, string typeAction, string action)
         {
-            this.target = target;
-            this.actor = actor;
-            this.typeAction = typeAction;
-            this.action = action;
+            Target = target;
+            Actor = actor;
+            TypeAction = typeAction;
+            Action = action;
         }
         private ActorAction() { }
+
+        public string Actor       { get; }
+        public string Target      { get; }
+        public string Action      { get; }
+        public string TypeAction  { get; }
+        public bool IsCombination { get; set; }
+
     }
 
-    private static Dictionary<string, List<ActorAction>> _actions;
-    private static ActionSortManager _instance;
+    private readonly Dictionary<string, List<ActorAction>> _actions = new Dictionary<string, List<ActorAction>>();
 
-    public static ActionSortManager Instance
+    //private static Dictionary<string, List<ActorAction>> _actions;
+    //private static ActionSortManager _instance;
+
+    //public static ActionSortManager Instance
+    //{
+    //    get { return _instance ?? (_instance = new ActionSortManager()); }
+    //}
+
+    //private ActionSortManager()
+    //{
+    //    _actions = new Dictionary<string, List<ActorAction>>();
+    //}
+
+    public void AddAction(string selectedTarget, string selectedActor, string selectedAction)
     {
-        get { return _instance ?? (_instance = new ActionSortManager()); }
-    }
+        string selectedTypeAction = null;////#Temporario Vai virar parametro depois, eu iria pegar o tipo da ação na própria ação, as não é o ideal, iria acoplar muito, eu não devo saber o tipo da ação aqui nem em GameStateCtrl                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         própria ação
+        ActorAction actorAction   = new ActorAction(selectedTarget, selectedActor, selectedTypeAction,selectedAction);
+        List<ActorAction> actions  = null;
 
-    private ActionSortManager()
-    {
-        _actions = new Dictionary<string, List<ActorAction>>();
-        selectedActors  = new Stack<string>();
-    }
+        actorAction.IsCombination = gen.Next(100) <= 80 ? true : false; //#Temporario
 
-    public void AddTarget(string _selectedTarget)
-    {
-        string _selectedActor  = SelectedActors.Peek();
-        ActorAction _actorAction = new ActorAction(_selectedTarget, _selectedActor, SelectedTypeAction, SelectedAction);
-        List<ActorAction> actions = null;
-
-        if (_actions.TryGetValue(_selectedTarget, out actions))
+        if (_actions.TryGetValue(selectedTarget, out actions))
         {
-            actions.Add(_actorAction);
+            actions.Add(actorAction);
         }
         else
         {
-            actions = new List<ActorAction> { _actorAction };
-            _actions.Add(_selectedTarget, actions);
+            actions = new List<ActorAction> { actorAction };
+            _actions.Add(selectedTarget, actions);
         }
+        Debug.Log(actorAction.Actor + " " + actorAction.Action + " " + actorAction.Target + " " + actorAction.IsCombination);
     }
 
     public void RemoveActor(string actor)
     {
         List<ActorAction> actions = null;
         string key;
-        foreach(KeyValuePair<string, List<ActorAction>> actorAction in _actions)
+        foreach (KeyValuePair<string, List<ActorAction>> actorAction in _actions)
         {
             actions = actorAction.Value;
-            key    = actorAction.Key;
+            key = actorAction.Key;
             foreach (ActorAction _actor in actions)
             {
-                if(_actor.Actor.Equals(actor))
+                if (_actor.Actor.Equals(actor))
                 {
-                    if(actions.Count > 1)
+                    if (actions.Count > 1)
                     {
                         if (_actions.TryGetValue(key, out actions))
                         {
@@ -96,18 +91,68 @@ public class ActionSortManager
         }
     }
 
+
     public void ClearAll()
     {
         _actions.Clear();
     }
 
-    public void Get()
+    private void RemoveFalseCombination(string selectedTarget) //#Temporario pensando se vai ser realmente temporario, caso não seja verificar possibilidade de refatorar
     {
-        foreach (List<ActorAction> actions in _actions.Values)
+        int i = 0;
+
+        List<ActorAction> actions = null;
+        if (_actions.TryGetValue(selectedTarget, out actions))
         {
-            foreach (ActorAction action in actions)
+            foreach (var action in actions)
             {
-                Debug.Log(action.Actor+" atacou: "+ action.Target+" com a ação: "+ action.Action+"!");
+                if (action.IsCombination)
+                {
+                    i++;
+                }
+            }
+
+            if (i < 2)
+            {
+                foreach (var action in actions)
+                {
+                    action.IsCombination = false;
+                }
+            }
+        }
+    }
+
+
+    public void PrintActions(string selectedTarget) //#Alterar vai ser alterado para metodo que busca dados de itens ataques e aplica na ficha em memoria chars e inimigos
+    {
+        List<ActorAction> actions = null;
+        int j = 0;
+
+        RemoveFalseCombination(selectedTarget); //#Temporario pensando, ler no metodo
+
+        if (_actions.TryGetValue(selectedTarget, out actions))
+        {
+            ActorAction actorAction = actions.Last();
+            j = actions.Count;
+
+            if (actorAction.IsCombination)
+            {
+                for (int i = 0; i < j; i++)
+                {
+                    actorAction = actions.Last();
+                    if (actorAction.IsCombination)
+                    {
+                        Debug.Log(actorAction.Actor + " deu alvo em : " + actorAction.Target + " com a ação: " + actorAction.Action + ". É uma combinação!");
+                        RemoveActor(actorAction.Actor);
+                        j--;
+                        i--;
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log(actorAction.Actor + " deu alvo em : " + actorAction.Target + " com a ação: " + actorAction.Action +  ". Não é uma combinação!");
+                RemoveActor(actorAction.Actor);
             }
         }
     }

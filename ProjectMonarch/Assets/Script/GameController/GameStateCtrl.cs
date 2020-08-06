@@ -8,9 +8,38 @@ using UnityEngine.UI;
 [System.Serializable]
 public class GameStateCtrl : MonoBehaviour
 {
-    public enum BattleStates : short { StartBattle, StartTurn, SelectActor, SelectAction, SelectTarget, BattlePhase, EndTurn }
-
+    private ActionSortManager actionSortManager = new ActionSortManager();
+    private enum BattleStates : short { StartBattle, StartTurn, SelectActor, SelectAction, SelectTarget, BattlePhase, EndTurn }
     private BattleStates _battleStates;
+
+    private class CharAction
+    {
+        public CharAction(GameObject objTarget, GameObject objChar, GameObject objAction)
+        {
+            ObjTarget     = objTarget;
+            ObjChar       = objChar;
+            ObjAction     = objAction;
+                          
+            TargetName    = objTarget.name;
+            CharName      = objChar.name;
+            ActionName    = objAction.name;
+        }
+
+        public string TargetName { get; }
+        public string CharName { get; }
+        public string ActionName { get; }
+
+        public GameObject ObjTarget { get; }
+        public GameObject ObjChar  { get; }
+        public GameObject ObjAction { get; }
+        private CharAction() { }
+
+    }
+
+    private Stack<CharAction> selectedTargetActions;        // nome ou id do ator
+    private List<string>      orderedTargets;        // nome ou id do ator
+
+    private CharAction _charAction;
 
     public GameObject _objButtonCharY;
     public GameObject _objButtonCharX;
@@ -23,10 +52,10 @@ public class GameStateCtrl : MonoBehaviour
     private Button _buttonCharB;
 
 
-    public GameObject _objActionCharBtY;
-    public GameObject _objActionCharBtX;
-    public GameObject _objActionCharBtA;
-    public GameObject _objActionCharBtB;
+    public GameObject _objActionCharBtsY;
+    public GameObject _objActionCharBtsX;
+    public GameObject _objActionCharBtsA;
+    public GameObject _objActionCharBtsB;
 
     private GameObject _objActionBt11;
     private GameObject _objActionBt12;
@@ -91,27 +120,34 @@ public class GameStateCtrl : MonoBehaviour
     private Button _btTargetCharB;
 
 
-    //private Dictionary<string, Dictionary<Button, GameObject>> _objButtons;
-    private Dictionary<GameObject, bool> _isSelectedCharBtns;
+    private Dictionary<GameObject, bool> _objCharBtns;
     private Dictionary<GameObject, GameObject> _objCharActionBts;
 
+    private int _countSelectedTgtActs;
     private bool _isActiveObjButton;
+    private bool _isBackOption;
+
     private GameObject _clickedCharButton;
+    private GameObject _clickedTargetButton;
     private GameObject _clickedActionButton;
-    //private Button _pressedButton;
 
 
     private GameObject[] _objCharBts;
-    private GameObject[] _objAcionBts;
+    private GameObject[] _objActionBts;
     private GameObject[] _objTargetCharBts;
     private GameObject[] _objTargetEnemBts;
 
 
     private void Awake()
     {
+        selectedTargetActions = new Stack<CharAction>();
+        orderedTargets        = new List<string>(4);        // nome ou id do ator
+
         _isActiveObjButton = false;
+        _isBackOption = false;
+        _countSelectedTgtActs = 0;
+
         _battleStates = GameStateCtrl.BattleStates.StartTurn;
-        //_objPhaseButtons = new Dictionary<Button, GameObject>();
 
         _buttonCharY = _objButtonCharY.GetComponent<Button>();
         _buttonCharX = _objButtonCharX.GetComponent<Button>();
@@ -129,7 +165,7 @@ public class GameStateCtrl : MonoBehaviour
         _btTargetCharB = _objBtTargetCharB.GetComponent<Button>();
 
 
-        _isSelectedCharBtns = new Dictionary<GameObject, bool>
+        _objCharBtns = new Dictionary<GameObject, bool>
         {
             {_objButtonCharY, false},
             {_objButtonCharX, false},
@@ -140,7 +176,7 @@ public class GameStateCtrl : MonoBehaviour
 
 
     _objCharBts       = new GameObject[] {_objButtonCharY, _objButtonCharX, _objButtonCharA, _objButtonCharB};
-    _objAcionBts      = new GameObject[4];
+    _objActionBts     = new GameObject[4];
     _objTargetCharBts = new GameObject[] {_objBtTargetCharY, _objBtTargetCharX , _objBtTargetCharA , _objBtTargetCharB};
     _objTargetEnemBts = new GameObject[] {_objBtTargetEnemY, _objBtTargetEnemX, _objBtTargetEnemA, _objBtTargetEnemB}; ;
 
@@ -148,106 +184,80 @@ public class GameStateCtrl : MonoBehaviour
 
 
 
-    _objCharActionBts = new Dictionary<GameObject, GameObject> {{_objButtonCharY, _objActionCharBtY}
-                                                              , {_objButtonCharX, _objActionCharBtX}
-                                                              , {_objButtonCharA, _objActionCharBtA}
-                                                              , {_objButtonCharB, _objActionCharBtB}};
+    _objCharActionBts = new Dictionary<GameObject, GameObject> {{_objButtonCharY, _objActionCharBtsY}
+                                                              , {_objButtonCharX, _objActionCharBtsX}
+                                                              , {_objButtonCharA, _objActionCharBtsA}
+                                                              , {_objButtonCharB, _objActionCharBtsB}};
 
 
 
-        for (var i = 0; i < _objActionCharBtY.transform.childCount; i++)
-        {
-            _objAcionBts[i] = _objActionCharBtY.transform.GetChild(i).gameObject;
-        }
-            _objActionBt11 = _objAcionBts[0];
-            _objActionBt12 = _objAcionBts[1];
-            _objActionBt13 = _objAcionBts[2];
-            _objActionBt14 = _objAcionBts[3];
+    for (var i = 0; i < _objActionCharBtsY.transform.childCount; i++)
+    {
+        _objActionBts[i] = _objActionCharBtsY.transform.GetChild(i).gameObject;
+    }
 
-            _buttonAction11 = _objActionBt11.GetComponent<Button>();
-            _buttonAction12 = _objActionBt12.GetComponent<Button>();
-            _buttonAction13 = _objActionBt13.GetComponent<Button>();
-            _buttonAction14 = _objActionBt14.GetComponent<Button>();
+    _objActionBt11 = _objActionBts[0];
+    _objActionBt12 = _objActionBts[1];
+    _objActionBt13 = _objActionBts[2];
+    _objActionBt14 = _objActionBts[3];
 
-
-
-            for (var i = 0; i < _objActionCharBtX.transform.childCount; i++)
-            {
-                _objAcionBts[i] = _objActionCharBtX.transform.GetChild(i).gameObject;
-            }
-            _objActionBt21 = _objAcionBts[0];
-            _objActionBt22 = _objAcionBts[1];
-            _objActionBt23 = _objAcionBts[2];
-            _objActionBt24 = _objAcionBts[3];
-        
-            _buttonAction21 = _objActionBt21.GetComponent<Button>();
-            _buttonAction22 = _objActionBt22.GetComponent<Button>();
-            _buttonAction23 = _objActionBt23.GetComponent<Button>();
-            _buttonAction24 = _objActionBt24.GetComponent<Button>();
-
-
-            for (var i = 0; i < _objActionCharBtA.transform.childCount; i++)
-            {
-                _objAcionBts[i] = _objActionCharBtA.transform.GetChild(i).gameObject;
-            }
-            _objActionBt31 = _objAcionBts[0];
-            _objActionBt32 = _objAcionBts[1];
-            _objActionBt33 = _objAcionBts[2];
-            _objActionBt34 = _objAcionBts[3];
-
-            _buttonAction31 = _objActionBt31.GetComponent<Button>();
-            _buttonAction32 = _objActionBt32.GetComponent<Button>();
-            _buttonAction33 = _objActionBt33.GetComponent<Button>();
-            _buttonAction34 = _objActionBt34.GetComponent<Button>();
+    _buttonAction11 = _objActionBt11.GetComponent<Button>();
+    _buttonAction12 = _objActionBt12.GetComponent<Button>();
+    _buttonAction13 = _objActionBt13.GetComponent<Button>();
+    _buttonAction14 = _objActionBt14.GetComponent<Button>();
 
 
 
-            for (var i = 0; i < _objActionCharBtB.transform.childCount; i++)
-            {
-                _objAcionBts[i] = _objActionCharBtB.transform.GetChild(i).gameObject;
-            }
-            _objActionBt41 = _objAcionBts[0];
-            _objActionBt42 = _objAcionBts[1];
-            _objActionBt43 = _objAcionBts[2];
-            _objActionBt44 = _objAcionBts[3];
+    for (var i = 0; i < _objActionCharBtsX.transform.childCount; i++)
+    {
+        _objActionBts[i] = _objActionCharBtsX.transform.GetChild(i).gameObject;
+    }
+    _objActionBt21 = _objActionBts[0];
+    _objActionBt22 = _objActionBts[1];
+    _objActionBt23 = _objActionBts[2];
+    _objActionBt24 = _objActionBts[3];
+    
+    _buttonAction21 = _objActionBt21.GetComponent<Button>();
+    _buttonAction22 = _objActionBt22.GetComponent<Button>();
+    _buttonAction23 = _objActionBt23.GetComponent<Button>();
+    _buttonAction24 = _objActionBt24.GetComponent<Button>();
 
-            _buttonAction41 = _objActionBt41.GetComponent<Button>();
-            _buttonAction42 = _objActionBt42.GetComponent<Button>();
-            _buttonAction43 = _objActionBt43.GetComponent<Button>();
-            _buttonAction44 = _objActionBt44.GetComponent<Button>();
+
+    for (var i = 0; i < _objActionCharBtsA.transform.childCount; i++)
+    {
+        _objActionBts[i] = _objActionCharBtsA.transform.GetChild(i).gameObject;
+    }
+    _objActionBt31 = _objActionBts[0];
+    _objActionBt32 = _objActionBts[1];
+    _objActionBt33 = _objActionBts[2];
+    _objActionBt34 = _objActionBts[3];
+
+    _buttonAction31 = _objActionBt31.GetComponent<Button>();
+    _buttonAction32 = _objActionBt32.GetComponent<Button>();
+    _buttonAction33 = _objActionBt33.GetComponent<Button>();
+    _buttonAction34 = _objActionBt34.GetComponent<Button>();
 
 
-        //_objButtons = new Dictionary<string, Dictionary<Button, GameObject>>
-        //{
-        //    {"char", new Dictionary<Button, GameObject>(){
-        //                 {_buttonCharY, _objButtonCharY},
-        //                 {_buttonCharX, _objButtonCharX},
-        //                 {_buttonCharA, _objButtonCharA},
-        //                 {_buttonCharB, _objButtonCharB}}},
 
-        //    //{"action", new Dictionary<Button, GameObject>(){
-        //    //             {_buttonAction1,_objActionBt1},
-        //    //             {_buttonAction2,_objActionBt2},
-        //    //             {_buttonAction3,_objActionBt3},
-        //    //             {_buttonAction4,_objActionBt4}}},
+    for (var i = 0; i < _objActionCharBtsB.transform.childCount; i++)
+    {
+        _objActionBts[i] = _objActionCharBtsB.transform.GetChild(i).gameObject;
+    }
+    _objActionBt41 = _objActionBts[0];
+    _objActionBt42 = _objActionBts[1];
+    _objActionBt43 = _objActionBts[2];
+    _objActionBt44 = _objActionBts[3];
 
-        //    {"tEenem", new Dictionary<Button, GameObject>(){
-        //                 {_btTargetEnemY,_objBtTargetEnemY},
-        //                 {_btTargetEnemX,_objBtTargetEnemX},
-        //                 {_btTargetEnemA,_objBtTargetEnemA},
-        //                 {_btTargetEnemB,_objBtTargetEnemB}}},
+    _buttonAction41 = _objActionBt41.GetComponent<Button>();
+    _buttonAction42 = _objActionBt42.GetComponent<Button>();
+    _buttonAction43 = _objActionBt43.GetComponent<Button>();
+    _buttonAction44 = _objActionBt44.GetComponent<Button>();
 
-        //    {"tChar", new Dictionary<Button, GameObject>(){
-        //              {_btTargetCharY,_objBtTargetCharY},
-        //              {_btTargetCharX,_objBtTargetCharX},
-        //              {_btTargetCharA,_objBtTargetCharA},
-        //              {_btTargetCharB,_objBtTargetCharB}}}
-        //};
 
     }
 
 
-    public void ClearLog()
+    public void ClearLog() //#Temporario
     {
         var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
         var type = assembly.GetType("UnityEditor.LogEntries");
@@ -255,27 +265,6 @@ public class GameStateCtrl : MonoBehaviour
         method.Invoke(new object(), null);
     }
 
-
-    private void BackOption(GameStateCtrl.BattleStates state)
-    {
-        if (state.Equals(GameStateCtrl.BattleStates.SelectAction))
-        {
-            if (ActionSortManager.Instance.SelectedActors.Count > 1)
-            {
-                ActionSortManager.Instance.SelectedActors.Pop();
-            }
-        }
-
-        if (state.Equals(GameStateCtrl.BattleStates.SelectTarget))
-        {
-
-        }
-
-        if (state.Equals(GameStateCtrl.BattleStates.SelectActor))
-        {
-            ActionSortManager.Instance.RemoveActor(ActionSortManager.Instance.SelectedActors.Peek());
-        }
-    }
 
     private void ActiveObjButtons(GameObject[] objBtns)
     {
@@ -311,11 +300,11 @@ public class GameStateCtrl : MonoBehaviour
     {
         if (pressedObjButton != null)
         {
-            if (_isSelectedCharBtns.TryGetValue(pressedObjButton, out var isSelectedbutton))
+            if (_objCharBtns.TryGetValue(pressedObjButton, out var isSelectedbutton))
             {
                 if (!isSelectedbutton)
                 {
-                    _isSelectedCharBtns[pressedObjButton] = true;
+                    _objCharBtns[pressedObjButton] = true;
                 }
             }
             return true;
@@ -324,28 +313,19 @@ public class GameStateCtrl : MonoBehaviour
     }
 
 
-
-    //private Dictionary<Button, GameObject> GetPhaseObjBtns(string codTypeBtn)
-    //{
-    //    if (_objButtons.TryGetValue(codTypeBtn, out var objPhaseButtons))
-    //    {
-    //        return objPhaseButtons;
-    //    }
-    //    return null;
-    //}
-
-
-    //private void GetPressCharButtonTeste(Dictionary<Button, GameObject> objButtons, Button buttonPressed)
-    //{
-    //    if (buttonPressed != null)
-    //    {
-    //        if (objButtons.TryGetValue(buttonPressed, out var objButton))
-    //        {
-    //            buttonPressed.onClick.AddListener(() => _clickedCharButton = objButton);
-    //        }
-    //    }
-    //}
-
+    private void DelectCharButton(GameObject pressedObjButton)
+    {
+        if (pressedObjButton != null)
+        {
+            if (_objCharBtns.TryGetValue(pressedObjButton, out var isSelectedButton))
+            {
+                if (isSelectedButton)
+                {
+                    _objCharBtns[pressedObjButton] = false;
+                }
+            }
+        }
+    }
 
 
     private void SetActionCharBt(GameObject charBtn)
@@ -354,17 +334,8 @@ public class GameStateCtrl : MonoBehaviour
         {
             for (var i = 0; i < objCharActionBt.transform.childCount; i++)
             {
-                _objAcionBts[i] = objCharActionBt.transform.GetChild(i).gameObject;
+                _objActionBts[i] = objCharActionBt.transform.GetChild(i).gameObject;
             }
-            //_objActionBt1 = _objAcionBts[0];
-            //_objActionBt2 = _objAcionBts[1];
-            //_objActionBt3 = _objAcionBts[2];
-            //_objActionBt4 = _objAcionBts[3];
-
-            //_buttonAction1 = _objActionBt1.GetComponent<Button>();
-            //_buttonAction2 = _objActionBt2.GetComponent<Button>();
-            //_buttonAction3 = _objActionBt3.GetComponent<Button>();
-            //_buttonAction4 = _objActionBt4.GetComponent<Button>();
         }
     }
 
@@ -375,6 +346,15 @@ public class GameStateCtrl : MonoBehaviour
         _buttonCharA?.onClick.AddListener(() => _clickedCharButton = _objButtonCharA);
         _buttonCharB?.onClick.AddListener(() => _clickedCharButton = _objButtonCharB);
 
+        _btTargetCharY?.onClick.AddListener(() => _clickedTargetButton = _objBtTargetCharY);
+        _btTargetCharX?.onClick.AddListener(() => _clickedTargetButton = _objBtTargetCharX);
+        _btTargetCharA?.onClick.AddListener(() => _clickedTargetButton = _objBtTargetCharA);
+        _btTargetCharB?.onClick.AddListener(() => _clickedTargetButton = _objBtTargetCharB);
+
+        _btTargetEnemY?.onClick.AddListener(() => _clickedTargetButton = _objBtTargetEnemY);
+        _btTargetEnemX?.onClick.AddListener(() => _clickedTargetButton = _objBtTargetEnemX);
+        _btTargetEnemA?.onClick.AddListener(() => _clickedTargetButton = _objBtTargetEnemA);
+        _btTargetEnemB?.onClick.AddListener(() => _clickedTargetButton = _objBtTargetEnemB);
 
         _buttonAction11?.onClick.AddListener(() => _clickedActionButton = _objActionBt11);
         _buttonAction12?.onClick.AddListener(() => _clickedActionButton = _objActionBt12);
@@ -436,14 +416,7 @@ public class GameStateCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (EventSystem.current.currentSelectedGameObject != null && !teste)
-        //{
-        //    _pressedButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-        //    Debug.Log("entrei up: " + _pressedButton?.GetType().Name);
-        //    teste = true;
-        //}
-
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q)) //#Temporario
         {
             //When a key is pressed down it see if it was the escape key if it was it will execute the code
             Application.Quit(); // Quits the game
@@ -456,80 +429,170 @@ public class GameStateCtrl : MonoBehaviour
 
         if (_battleStates.Equals(GameStateCtrl.BattleStates.SelectActor))
         {
-            if (!_isActiveObjButton)
+            if (_isBackOption)
             {
-                ActiveObjCharButtons(_isSelectedCharBtns);
-                _isActiveObjButton = true;
-            }
+                _countSelectedTgtActs = selectedTargetActions.Count;
 
-            if (SelectCharButton(_clickedCharButton) && _isActiveObjButton)
+                if (_countSelectedTgtActs > 0)
+                {
+                    _battleStates = GameStateCtrl.BattleStates.SelectTarget;
+                    DeactiveObjButtons(_objCharBts);
+                    _isActiveObjButton   = false;
+
+                    _clickedCharButton   = selectedTargetActions.Peek().ObjChar;
+                    _clickedActionButton = selectedTargetActions.Peek().ObjAction;
+                    _clickedTargetButton = selectedTargetActions.Peek().ObjTarget;
+                    selectedTargetActions.Pop();
+                    orderedTargets.RemoveAt(orderedTargets.Count-1);
+                }
+                _isBackOption = false;
+            }
+            else
             {
-                DeactiveObjButtons(_objCharBts);
-                _isActiveObjButton = false;
-                _battleStates = GameStateCtrl.BattleStates.SelectAction;
+                if (!_isActiveObjButton)
+                {
+                    ActiveObjCharButtons(_objCharBtns);
+                    _isActiveObjButton = true;
+                    _clickedCharButton = null;
+
+                }
+
+                if (SelectCharButton(_clickedCharButton) && _isActiveObjButton)
+                {
+                    DeactiveObjButtons(_objCharBts);
+                    _isActiveObjButton = false;
+                    _battleStates = GameStateCtrl.BattleStates.SelectAction;
+                }
             }
         }
 
         if (_battleStates.Equals(GameStateCtrl.BattleStates.SelectAction))
         {
-            if (!_isActiveObjButton)
+            if (_isBackOption)
             {
-                SetActionCharBt(_clickedCharButton);
-                ActiveObjButtons(_objAcionBts);
-                _clickedCharButton = null;
-                _isActiveObjButton = true;
-                Debug.Log(_clickedActionButton?.name);
-            }
-
-            if (_clickedActionButton != null && _isActiveObjButton)
-            {
-                DeactiveObjButtons(_objAcionBts);
+                _battleStates = GameStateCtrl.BattleStates.SelectActor;
+                DeactiveObjButtons(_objActionBts);
+                DelectCharButton(_clickedCharButton);
+                _isBackOption = false;
                 _isActiveObjButton = false;
-                _battleStates = GameStateCtrl.BattleStates.SelectTarget;
+            }
+            else
+            {
+                if (!_isActiveObjButton)
+                {
+                    SetActionCharBt(_clickedCharButton);
+                    ActiveObjButtons(_objActionBts);
+                    _isActiveObjButton = true;
+                    _clickedActionButton = null;
+                }
+
+                if (_clickedActionButton != null && _isActiveObjButton)
+                {
+                    DeactiveObjButtons(_objActionBts);
+                    _isActiveObjButton = false;
+                    _battleStates = GameStateCtrl.BattleStates.SelectTarget;
+                }
             }
         }
 
         if (_battleStates.Equals(GameStateCtrl.BattleStates.SelectTarget))
         {
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (_isBackOption)
             {
-
+                _battleStates = GameStateCtrl.BattleStates.SelectAction;
+                DeactiveObjButtons(_objTargetCharBts);
+                DeactiveObjButtons(_objTargetEnemBts);
+                _isBackOption = false;
+                _isActiveObjButton = false;
             }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            else
             {
+                if (!_isActiveObjButton)
+                {
+                    ActiveObjButtons(_objTargetEnemBts);
+                    _isActiveObjButton = true;
+                    _clickedTargetButton = null;
+                }
 
+                if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    ActiveObjButtons(_objTargetCharBts);
+                    DeactiveObjButtons(_objTargetEnemBts);
+                }
+                else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    ActiveObjButtons(_objTargetEnemBts);
+                    DeactiveObjButtons(_objTargetCharBts);
+                }
+
+                if (_clickedTargetButton != null && _isActiveObjButton)
+                {
+                    DeactiveObjButtons(_objTargetCharBts);
+                    DeactiveObjButtons(_objTargetEnemBts);
+                    _isActiveObjButton = false;
+
+                    _battleStates = GameStateCtrl.BattleStates.BattlePhase;
+
+                    _charAction = new CharAction(_clickedTargetButton,_clickedCharButton, _clickedActionButton);
+                    selectedTargetActions.Push(_charAction);
+
+                    orderedTargets.Add(_charAction.TargetName);
+               
+                    foreach (var charBtn in _objCharBtns)
+                    {
+                        if (!charBtn.Value)
+                        {
+                            _battleStates = GameStateCtrl.BattleStates.SelectActor;
+                        }
+                    }
+                }
             }
-
-            //_battleStates = GameStateCtrl.BattleStates.SelectActor;
         }
 
         if (_battleStates.Equals(GameStateCtrl.BattleStates.BattlePhase))
         {
-            ClearLog();
-            ActionSortManager.Instance.Get();
-            ActionSortManager.Instance.ClearAll();
+            if (!_isActiveObjButton)
+            {
+                foreach (CharAction targetAction in selectedTargetActions)
+                {
+                    actionSortManager.AddAction(targetAction.TargetName,targetAction.CharName,targetAction.ActionName);
+                }
+                selectedTargetActions.Pop();
+                _isActiveObjButton = true;
+
+                ////#Pendente vai haver um passo aqui no meio onde o ActionSortManager vai com as chaves buscar as informações de ataque e etc
+
+                foreach (string target in orderedTargets)
+                {
+                    Debug.Log(target);
+                }
+
+                foreach (string target in orderedTargets)
+                {
+                    actionSortManager.PrintActions(target); //#Temporario
+                }
+            }
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.B))
+            if (Input.GetKeyDown(KeyCode.B)) //#Temporario
             {
                 Debug.Log(_battleStates);
-                BackOption(_battleStates);
+                _isBackOption = true;
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T)) //#Temporario
         {
-            ClearLog();
-            ActionSortManager.Instance.Get();
+
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S)) //#Temporario
         {
             Debug.Log(_battleStates);
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P)) //#Temporario
         {
 
         }

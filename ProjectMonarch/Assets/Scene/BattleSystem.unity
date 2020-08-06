@@ -516,10 +516,10 @@ MonoBehaviour:
   _objButtonCharX: {fileID: 43112149}
   _objButtonCharA: {fileID: 20360042}
   _objButtonCharB: {fileID: 1338434119}
-  _objActionCharBtY: {fileID: 1831321844}
-  _objActionCharBtX: {fileID: 1084344963}
-  _objActionCharBtA: {fileID: 296813883}
-  _objActionCharBtB: {fileID: 15167918}
+  _objActionCharBtsY: {fileID: 1831321844}
+  _objActionCharBtsX: {fileID: 1084344963}
+  _objActionCharBtsA: {fileID: 296813883}
+  _objActionCharBtsB: {fileID: 15167918}
   _objBtTargetEnemY: {fileID: 1506314824}
   _objBtTargetEnemX: {fileID: 1919033468}
   _objBtTargetEnemA: {fileID: 1430457205}
